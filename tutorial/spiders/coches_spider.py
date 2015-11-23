@@ -8,13 +8,31 @@ class CochesSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        precio = response.xpath('//p[@class="preu floatleft"]/text()').extract()
-        modelo = response.xpath('//div[@class="col2-grid"]//h2/text()').extract()
-        provincia = response.xpath('//span[@class="lloc"]/text()').extract()
-        combustible =  response.xpath('//span[@class="d3"]/text()').extract()
-        year =  response.xpath('//span[@class="d2"]/text()').extract()
-        kms = response.xpath('//span[@class="d1"]/text()').extract()
-        datos = response.xpath('//div[@class="contact-ad"]').extract()
+        for sel in response.xpath('//div[@style="position:relative"]'):
+            prefix='a/div[@class="datacar"]/div[@class="col2-grid"]/'
+            precio = sel.xpath(prefix+'p[@class="preu floatleft"]/text()').extract()
+            modelo = sel.xpath(prefix+'h2/text()').extract()
+            provincia = sel.xpath(prefix+'p[@class="dades"]/span[@class="lloc"]/text()').extract()
+            combustible =  sel.xpath(prefix+'p[@class="dades"]/span[@class="d3"]/text()').extract()
+            year =  sel.xpath(prefix+'p[@class="dades"]/span[@class="d2"]/text()').extract()
+            kms = sel.xpath(prefix+'p[@class="dades"]/span[@class="d1"]/text()').extract()
+            datos = sel.xpath('div[@class="contact-ad"]').xpath('@data-t').extract()
 
 
-        print modelo, precio, provincia, combustible, year, kms, datos
+
+
+            print precio, modelo, provincia, combustible, year, kms, datos
+
+            prefix='a/div[@class="datacar_destacado"]/div[@class="col2-grid"]/'
+            precio = sel.xpath(prefix+'p[@class="preu floatleft"]/text()').extract()
+            modelo = sel.xpath(prefix+'h2/span/text()').extract()
+            provincia = sel.xpath(prefix+'p[@class="dades"]/span[@class="lloc"]/span/text()').extract()
+            combustible =  sel.xpath(prefix+'p[@class="dades"]/span[@class="d3"]/span/text()').extract()
+            year =  sel.xpath(prefix+'p[@class="dades"]/span[@class="d2"]/span/text()').extract()
+            kms = sel.xpath(prefix+'p[@class="dades"]/span[@class="d1"]/text()').extract()
+            datos = sel.xpath('div[@class="contact-ad"]').xpath('@data-t').extract()
+            print "--------------"
+
+            print precio, modelo, provincia, combustible, year, kms, datos
+            print "====================="
+
