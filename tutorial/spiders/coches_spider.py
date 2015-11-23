@@ -1,14 +1,22 @@
 import scrapy
+import requests
+from scrapy.http import Request
 from tutorial.items import CochesItem
 
+URL = "http://www.coches.net/coches-de-ocasion.aspx?pg=%d&OfferTypeGroup=0&or=-1&fi=SortDate"
+starting_number = 0
+number_of_pages = 5000
 class CochesSpider(scrapy.Spider):
     name = "coches"
     allowed_domains = ["www.coches.net"]
-    start_urls = [
-        "http://www.coches.net/coches-de-ocasion.aspx",
-    ]
+    start_urls = [URL % starting_number]
+    def __init__(self):
+        self.page_number = starting_number
+    def start_requests(self):
+        for i in range (self.page_number, 5000, +1):
+            yield Request(url = URL % i, callback=self.parse)
 
-    def parse(self, response):
+    def parse(self, response,i=0):
         for sel in response.xpath('//div[@style="position:relative"]'):
             item = CochesItem()
             prefix='a/div[@class="datacar"]/div[@class="col2-grid"]/'
@@ -29,10 +37,6 @@ class CochesSpider(scrapy.Spider):
                 item['year'] =  sel.xpath(prefix+'p[@class="dades"]/span[@class="d2"]/span/text()').extract()
                 item['kms'] = sel.xpath(prefix+'p[@class="dades"]/span[@class="d1"]/text()').extract()
             yield item
-        next_page = response.xpath('//a[@class="pnext"]/@href').extract()
-        if next_page:
-            url = response.urljoin("http://www.coches.net/coches-de-ocasion.aspx"+next_page[0])
-            yield scrapy.Request(url,self.parse)
 
 
 
