@@ -12,8 +12,4 @@ class CochesItem(scrapy.Item):
     # define the fields for your item here like:
     modelo = scrapy.Field()
     precio = scrapy.Field() 
-    provincia = scrapy.Field()
-    combustible = scrapy.Field()
-    year = scrapy.Field()
-    kms = scrapy.Field()
     datos = scrapy.Field()
