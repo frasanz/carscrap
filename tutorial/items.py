@@ -13,3 +13,4 @@ class CochesItem(scrapy.Item):
     modelo = scrapy.Field()
     precio = scrapy.Field() 
     datos = scrapy.Field()
+    enlace = scrapy.Field()
